@@ -1,0 +1,234 @@
+<script>  
+  function str_to_clipboard(str) {    
+    navigator.clipboard
+      .writeText(str)
+      .then(() => {})
+      .catch(() => {
+        alert("An error occured.");
+      });
+  }
+  
+  function change_keys_visibility() {
+    let mainState =
+      document.getElementById("keyTypeRadioMain").checked ? "" : "none";
+    for (let el of document.getElementsByClassName("main-key-column"))
+      el.style.display = mainState;
+    let relayState =
+      document.getElementById("keyTypeRadioRelay").checked ? "" : "none";
+    for (let el of document.getElementsByClassName("relay-key-column"))
+      el.style.display = relayState;
+  }
+  
+  window.onload = change_keys_visibility;
+</script>
+
+<style>
+  @media (max-width: 799px) {
+    .desktop_table {
+        display: none;
+    }
+  }
+  
+  @media (min-width: 800px) {
+    .mobile_table {
+        display: none;
+    }
+  }
+</style>
+
+<?php
+  function get_key_buttons($keys, $keyType) {
+    $btns = "";
+
+    if ($keyType == "main") {
+      $btnType = "primary";
+    } elseif ($keyType == "relay") {
+      $btnType = "secondary";
+    } else {
+      return $btns;
+    }
+
+    if(!empty($keys)) {
+      foreach($keys as $i=>$key) {
+        $btns .=
+          "<button class=\"btn mb-1 btn-{$btnType}\" onclick=
+            \"str_to_clipboard('{$key}')\">".(++$i)."</button>". PHP_EOL;
+      }
+    } else {
+      $btns = "Ретрансляция не требуется";
+    }
+
+    return $btns;
+  }
+?>
+
+<form method="POST" class="container text-right pt-3">
+  <button class="btn btn-danger" name="logout">Выйти</button>
+</form>
+
+<div class="container text-center mb-2">
+    <h1>Здравствуйте, <?php echo $user_data['name'];?>!</h1>
+    <p class="text-left">
+      Вам предоставлен доступ к серверам, перечисленным ниже.<br>
+      Нажмите на кнопку с номером нужного вам ключа в таблице,
+      чтобы скопировать этот ключ в буфер обмена.<br>
+      Пожалуйста, используйте ключи с пометкой "ретранслятор" 
+      <b>только если вам их порекомендовал администратор серверов</b>.
+    </p>
+</div>
+
+<div class="container text-left mb-2">
+  <div class="form-check form-check-inline">
+    <input
+      class="form-check-input"
+      type="radio"
+      name="keyTypeRadioOptions"
+      id="keyTypeRadioMain"
+      value="main"
+      onchange="change_keys_visibility()"
+      checked
+    >
+    <label class="form-check-label" for="keyTypeRadioMain">
+      Основные ключи
+    </label>
+  </div>
+  <div class="form-check form-check-inline">
+    <input
+      class="form-check-input"
+      type="radio"
+      name="keyTypeRadioOptions"
+      id="keyTypeRadioRelay"
+      value="relay"
+      onchange="change_keys_visibility()"
+    >
+    <label class="form-check-label" for="keyTypeRadioRelay">
+      Ретрансляторы
+    </label>
+  </div>
+</div>
+
+<div class="container text-center table-responsive desktop_table">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col" class="align-middle">Сервер</th>
+        <th scope="col" class="align-middle">Расположение</th>
+        <th scope="col" class="align-middle">Описание</th>
+        <th scope="col" class="align-middle main-key-column">
+          Ключ<br>(основной)
+        </th>
+        <th scope="col" class="align-middle relay-key-column">
+          Ключ<br>(ретранслятор)
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <?php
+      foreach($srvs as $srv) {
+        $mainbtns = get_key_buttons($srv['main_keys'], "main");
+        $relaybtns = get_key_buttons($srv['relay_keys'], "relay");
+
+        echo ""
+        ."<tr>" . PHP_EOL
+          ."<th scope=\"row\"> {$srv['name']} </th>" . PHP_EOL
+          ."<td> {$srv['location']} </td>" . PHP_EOL
+          ."<td> {$srv['description']} </td>" . PHP_EOL
+          ."<td class=\"main-key-column\"> {$mainbtns} </td>" . PHP_EOL
+          ."<td class=\"relay-key-column\"> {$relaybtns} </td>" . PHP_EOL
+        ."</tr>" . PHP_EOL;
+      }
+    ?>
+    </tbody>
+  </table>
+</div>
+
+<div class="container text-center table-responsive mobile_table">
+  <table class="table">
+    <tbody>
+    <?php
+      foreach($srvs as $srv) {
+        $mainbtns = get_key_buttons($srv['main_keys'], "main");
+        $relaybtns = get_key_buttons($srv['relay_keys'], "relay");
+
+        echo ""
+        ."<tr>" . PHP_EOL
+          ."<td>" . PHP_EOL
+            ."<b>{$srv['name']}</b><br>" . PHP_EOL
+            ."{$srv['location']}<br>" . PHP_EOL
+            ."{$srv['description']}<br>" . PHP_EOL
+            ."Кликните, чтобы скопировать ключ:<br>" . PHP_EOL
+            ."<div class=\"main-key-column\"> {$mainbtns} </div>" . PHP_EOL
+            ."<div class=\"relay-key-column\"> {$relaybtns} </div>" . PHP_EOL
+          ."</td>" . PHP_EOL
+        ."</tr>" . PHP_EOL;
+      }
+    ?>
+    </tbody>
+  </table>
+</div>
+
+<div class="container text-left mb-5">
+  <h2>Как начать пользоваться?</h2>
+  <ol>
+    <li>
+      Скачайте приложение Amnezia VPN <a href="https://storage.googleapis.com/kldscp/amnezia.org/ru/downloads" target="_blank"> по этой ссылке</a> и установите его.
+    </li>
+    <li>
+      Скопируйте нужный вам ключ с этой страницы и добавьте его в приложение. Инструкцию по добавлению вы можете найти 
+      <a href="https://storage.googleapis.com/kldscp/amnezia.org" target="_blank">на сайте Amnezia</a>.
+      Для этого кликните на кнопку "Документация" вверху страницы, нажмите кнопку "Документация" на открывшейся странице и перейдите в раздел 
+      "Подключение через ключ в виде текста" в меню слева.
+    </li>
+  </ol>
+  <p>Вы можете добавить в приложение сразу несколько серверов и переключаться между ними по необходимости. Для этого воспользуйтесь кнопкой со значком "плюс" в 
+  нижней части главного экрана приложения.</p>
+  <h2>Как выбрать сервер?</h2>
+  <ul style="list-style-type:disc;">
+    <li>Если вы собираетесь скачивать торренты, используйте <b>только</b> сервер <i>Jimmy</i>.</li>
+    <li>
+      Если, наоборот, вы не планируете скачивать торренты, пожалуйста, избегайте использования этого сервера.
+      Так вы не будете создавать на него лишнюю нагрузку и сохраните пропускную полосу сервера для тех, кому она нужнее.
+    </li>
+    <li>Избегайте использования сервера <i>Jimmy</i> на мобильных устройствах: крайне маловероятно, что вы будете скачивать с них торренты.</li>
+    <li>Если расположение сервера вам не важно, выбирайте между серверами <i>Howard</i> и <i>Chuck</i> наугад.</li>
+    <li>Сервер <i>Howard</i> расположен чуть ближе к европейской части России и, вероятно, обеспечит чуть меньшую задержку, чем <i>Chuck</i>.</li>
+    <li>Но канал передачи данных у <i>Chuck</i> в три раза шире, чем у <i>Howard</i>.</li>
+    <li>
+      Используйте сервер <i>Caldera</i>, только если вы находитесь за рубежом и вам нужно получить доступ к 
+      российским сайтам, доступ к которым с иностранных IP адресов ограничен. Помните, что в таком сценарии российским властям теоретически
+      доступны доменные имена и IP адреса сайтов, которые вы посещаете.
+    </li>
+    <li>
+      Используйте ретрансляторы, только если вам порекомендовал их администратор или если вы понимаете, зачем они нужны. Ретрансляцию обеспечивает
+      сервер <i>Caldera</i>, но в этом сценарии весь трафик проходит через него в зашифрованном виде.
+    </li>
+  </ul> 
+  
+  <h2>Как пользоваться с нескольких устройств одновременно?</h2>
+  <p>Из-за технических особенностей используемого протокола VPN, в любой момент времени каждый ключ
+  может использоваться для подключения только с одного устройства. Это означает, что если два устройства
+  используют один и тот же ключ, они не могут подключаться к VPN одновременно. Пожалуйста, используйте разные ключи
+  на устройствах, которые вы хотите подключать к VPN одновременно.<br>
+  <br>
+  Для вашего удобства имя сервера в приложении Amnezia содержит номер использованного вами ключа.
+  Например, если вы использовали  ключ №3 для подключения своего телефона к серверу Chuck,
+  в приложении в качестве имени сервера будет отображаться "Chuck FI 3".<br>
+  <br>
+  <b>Обратите внимание:</b> ключи для каждого отдельного сервера <b>уникальны</b> и не повторяются. Это значит,
+  что вам доступно по 5 одновременных подключений <i>к каждому серверу</i>, а не всего.<br>
+  <br>
+  Если вам нужно больше 5 одновременных подключений, пожалуйста, напишите мне, и я сгенерирую для вас дополнительные
+  ключи. Объяснять, почему вам нужно больше 5 подключений, не потребуется.</p>  
+  <h2>Как переключаться между добавленными серверами?</h2>
+  <ol>
+    <li>Кликните на кнопку со значком "стрелка вниз" справа от названия выбранного сервера.</li>
+    <li>Кликните на нужный вам сервер.</li>
+    <li>Кликните на кнопку со значком "домик" в нижней части приложения.</li>
+  </ol>
+  <h2>Что такое раздельное туннелирование?</h2>
+  <p>Раздельное туннелирование позволяет вам отправлять трафик выбранных сайтов или приложений в обход VPN. Это может быть удобно, если вы хотите, не отключая VPN, заходить
+  на российские сайты, доступ к которым с зарубежных IP адресов ограничен.<br>
+  Помните, что современные сайты могут использовать в своей работе множество разных доменов, поэтому настройка раздельного туннелирования сайтов может оказаться нетривиальной.
+  Раздельное туннелирование приложений проще в настройке. Например, вы можете установить на свой компьютер второй браузер и заходить через него на российские сайты без
+  необходимости отключать VPN, предварительно настроив для этого браузера раздельное туннелирование.<p>
+</div>
