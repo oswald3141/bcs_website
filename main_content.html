@@ -37,7 +37,7 @@
 </style>
 
 <?php
-  function get_key_buttons($keys, $keyType) {
+  function get_awg_key_buttons($keys, $keyType) {
     $btns = "";
 
     if ($keyType == "main") {
@@ -59,6 +59,28 @@
     }
 
     return $btns;
+  }
+
+  function get_xray_key_button($key, $keyType) {
+    $btn = "";
+
+    if ($keyType == "main") {
+      $btnType = "primary";
+      $btn = "Протокол не поддерживается";
+    } elseif ($keyType == "relay") {
+      $btnType = "secondary";
+      $btn = "Ретрансляция не требуется";
+    } else {
+      return $btn;
+    }
+
+    if(!empty($key)) {
+        $btn =
+          "<button class=\"btn mb-1 btn-{$btnType}\" onclick=
+            \"str_to_clipboard('{$key}')\">Скопировать</button>" . PHP_EOL;
+    }
+
+    return $btn;
   }
 ?>
 
@@ -115,26 +137,36 @@
         <th scope="col" class="align-middle">Расположение</th>
         <th scope="col" class="align-middle">Описание</th>
         <th scope="col" class="align-middle main-key-column">
-          Ключ<br>(основной)
+          Ключ AWG<br>(основной)
+        </th>
+        <th scope="col" class="align-middle main-key-column">
+          Ключ XRay<br>(основной)
         </th>
         <th scope="col" class="align-middle relay-key-column">
-          Ключ<br>(ретранслятор)
+          Ключ AWG<br>(ретранслятор)
+        </th>
+        <th scope="col" class="align-middle relay-key-column">
+          Ключ XRay<br>(ретранслятор)
         </th>
       </tr>
     </thead>
     <tbody>
     <?php
       foreach($srvs as $srv) {
-        $mainbtns = get_key_buttons($srv['main_keys'], "main");
-        $relaybtns = get_key_buttons($srv['relay_keys'], "relay");
+        $mainbtns_awg = get_awg_key_buttons($srv['main_keys_awg'], "main");
+        $mainbtn_xray = get_xray_key_button($srv['main_key_xray'], "main");
+        $relaybtns_awg = get_awg_key_buttons($srv['relay_keys_awg'], "relay");
+        $relaybtn_xray = get_xray_key_button($srv['relay_key_xray'], "relay");
 
         echo ""
         ."<tr>" . PHP_EOL
           ."<th scope=\"row\"> {$srv['name']} </th>" . PHP_EOL
           ."<td> {$srv['location']} </td>" . PHP_EOL
           ."<td> {$srv['description']} </td>" . PHP_EOL
-          ."<td class=\"main-key-column\"> {$mainbtns} </td>" . PHP_EOL
-          ."<td class=\"relay-key-column\"> {$relaybtns} </td>" . PHP_EOL
+          ."<td class=\"main-key-column\"> {$mainbtns_awg} </td>" . PHP_EOL
+          ."<td class=\"main-key-column\"> {$mainbtn_xray} </td>" . PHP_EOL
+          ."<td class=\"relay-key-column\"> {$relaybtns_awg} </td>" . PHP_EOL
+          ."<td class=\"relay-key-column\"> {$relaybtn_xray} </td>" . PHP_EOL
         ."</tr>" . PHP_EOL;
       }
     ?>
@@ -147,8 +179,10 @@
     <tbody>
     <?php
       foreach($srvs as $srv) {
-        $mainbtns = get_key_buttons($srv['main_keys'], "main");
-        $relaybtns = get_key_buttons($srv['relay_keys'], "relay");
+        $mainbtns_awg = get_awg_key_buttons($srv['main_keys_awg'], "main");
+        $mainbtn_xray = get_xray_key_button($srv['main_key_xray'], "main");
+        $relaybtns_awg = get_awg_key_buttons($srv['relay_keys_awg'], "relay");
+        $relaybtn_xray = get_xray_key_button($srv['relay_key_xray'], "relay");
 
         echo ""
         ."<tr>" . PHP_EOL
@@ -156,9 +190,12 @@
             ."<b>{$srv['name']}</b><br>" . PHP_EOL
             ."{$srv['location']}<br>" . PHP_EOL
             ."{$srv['description']}<br>" . PHP_EOL
-            ."Кликните, чтобы скопировать ключ:<br>" . PHP_EOL
-            ."<div class=\"main-key-column\"> {$mainbtns} </div>" . PHP_EOL
-            ."<div class=\"relay-key-column\"> {$relaybtns} </div>" . PHP_EOL
+            ."Кликните, чтобы скопировать ключ AWG:<br>" . PHP_EOL
+            ."<div class=\"main-key-column\"> {$mainbtns_awg} </div>" . PHP_EOL
+            ."<div class=\"relay-key-column\"> {$relaybtns_awg} </div>" .PHP_EOL
+            ."Кликните, чтобы скопировать ключ XRay:<br>" . PHP_EOL
+            ."<div class=\"main-key-column\"> {$mainbtn_xray} </div>" . PHP_EOL
+            ."<div class=\"relay-key-column\"> {$relaybtn_xray} </div>" .PHP_EOL
           ."</td>" . PHP_EOL
         ."</tr>" . PHP_EOL;
       }
