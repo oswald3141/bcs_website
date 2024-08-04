@@ -84,13 +84,13 @@
   }
 ?>
 
-<form method="POST" class="container text-right pt-3">
+<form method="POST" class="container-md text-end pt-3">
   <button class="btn btn-danger" name="logout">Выйти</button>
 </form>
 
-<div class="container text-center mb-2">
+<div class="container-md text-center mb-2">
     <h1>Здравствуйте, <?php echo $user_data['name'];?>!</h1>
-    <p class="text-left">
+    <p class="text-start">
       Вам предоставлен доступ к серверам, перечисленным ниже.<br>
       Нажмите на кнопку с номером нужного вам ключа в таблице,
       чтобы скопировать этот ключ в буфер обмена.<br>
@@ -99,7 +99,7 @@
     </p>
 </div>
 
-<div class="container text-left mb-2">
+<div class="container-md text-start mb-2">
   <div class="form-check form-check-inline">
     <input
       class="form-check-input"
@@ -129,23 +129,23 @@
   </div>
 </div>
 
-<div class="container text-center table-responsive desktop_table">
+<div class="container-md text-center table-responsive desktop_table">
   <table class="table">
-    <thead class="thead-dark">
+    <thead class="table-dark">
       <tr>
-        <th scope="col" class="align-middle">Сервер</th>
-        <th scope="col" class="align-middle">Расположение</th>
-        <th scope="col" class="align-middle">Описание</th>
-        <th scope="col" class="align-middle main-key-column">
+        <th scope="col" class="align-middle col-1">Сервер</th>
+        <th scope="col" class="align-middle col-1">Расположение</th>
+        <th scope="col" class="align-middle col-4">Описание</th>
+        <th scope="col" class="align-middle col-3 main-key-column">
           Ключ AWG<br>(основной)
         </th>
-        <th scope="col" class="align-middle main-key-column">
+        <th scope="col" class="align-middle col-3 main-key-column">
           Ключ XRay<br>(основной)
         </th>
-        <th scope="col" class="align-middle relay-key-column">
+        <th scope="col" class="align-middle col-3 relay-key-column">
           Ключ AWG<br>(ретранслятор)
         </th>
-        <th scope="col" class="align-middle relay-key-column">
+        <th scope="col" class="align-middle col-3 relay-key-column">
           Ключ XRay<br>(ретранслятор)
         </th>
       </tr>
@@ -174,7 +174,7 @@
   </table>
 </div>
 
-<div class="container text-center table-responsive mobile_table">
+<div class="container-md text-center table-responsive mobile_table">
   <table class="table">
     <tbody>
     <?php
@@ -204,7 +204,7 @@
   </table>
 </div>
 
-<div class="container text-left mb-5">
+<div class="container-md text-start mb-5">
   <h2>Как начать пользоваться?</h2>
   <ol>
     <li>
