@@ -1,5 +1,5 @@
-key_1_user0_chuck_relay
-key_2_user0_chuck_relay
-key_3_user0_chuck_relay
-key_4_user0_chuck_relay
-key_5_user0_chuck_relay
+awg_key_1_user0_chuck_relay
+awg_key_2_user0_chuck_relay
+awg_key_3_user0_chuck_relay
+awg_key_4_user0_chuck_relay
+awg_key_5_user0_chuck_relay

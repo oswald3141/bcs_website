@@ -1,5 +1,5 @@
-key_1_user1_jimmy_relay
-key_2_user1_jimmy_relay
-key_3_user1_jimmy_relay
-key_4_user1_jimmy_relay
-key_5_user1_jimmy_relay
+awg_key_1_user1_jimmy_relay
+awg_key_2_user1_jimmy_relay
+awg_key_3_user1_jimmy_relay
+awg_key_4_user1_jimmy_relay
+awg_key_5_user1_jimmy_relay
