@@ -7,6 +7,25 @@
         alert("An error occured.");
       });
   }
+
+  function download_str(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+
+  function return_awg_key_to_user(name, standard, decoded) {
+    var c = document.getElementById('awgKeyFormatCheckDecoded');
+    if (c.checked) {
+      download_str(name + '.conf', decoded);
+    } else { 
+      str_to_clipboard(standard);
+    }
+  }
   
   function change_keys_visibility() {
     let mainState =
@@ -37,7 +56,19 @@
 </style>
 
 <?php
-  function get_awg_key_buttons($keys, $keyType) {
+  function awg_link_to_native($key) {
+    $output = null;
+    $retval = null;
+    $command = '../amnezia_link_to_native_awg "' . $key . '"';
+    exec($command, $output, $retval);
+    if ($retval == 0) {
+      return implode('\n', $output);
+    } else {
+      return "ERROR OCCURED";
+    }
+  }
+
+  function get_awg_key_buttons($srv, $keys, $keyType) {
     $btns = "";
 
     if ($keyType == "main") {
@@ -50,9 +81,11 @@
 
     if(!empty($keys)) {
       foreach($keys as $i=>$key) {
+        $name = $srv . "_" . (++$i) . "_" . $keyType;
+        $conf = awg_link_to_native($key);
         $btns .=
           "<button class=\"btn mb-1 btn-{$btnType}\" onclick=
-            \"str_to_clipboard('{$key}')\">".(++$i)."</button>". PHP_EOL;
+            \"return_awg_key_to_user('{$name}', '{$key}', '{$conf}')\">".$i."</button>". PHP_EOL;
       }
     } else {
       $btns = "Ретрансляция не требуется";
@@ -127,6 +160,17 @@
       Ретрансляторы
     </label>
   </div>
+  <div class="form-check form-check-inline">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      id="awgKeyFormatCheckDecoded"
+      value="decoded"
+    >
+    <label class="form-check-label" for="awgKeyFormatCheckDecoded">
+      Расшифровать AWG
+    </label>
+  </div>
 </div>
 
 <div class="container-md text-center table-responsive desktop_table">
@@ -153,9 +197,11 @@
     <tbody>
     <?php
       foreach($srvs as $srv) {
-        $mainbtns_awg = get_awg_key_buttons($srv['main_keys_awg'], "main");
+        $mainbtns_awg = get_awg_key_buttons(
+          $srv['name'], $srv['main_keys_awg'], "main");
         $mainbtn_xray = get_xray_key_button($srv['main_key_xray'], "main");
-        $relaybtns_awg = get_awg_key_buttons($srv['relay_keys_awg'], "relay");
+        $relaybtns_awg = get_awg_key_buttons(
+          $srv['name'], $srv['relay_keys_awg'], "relay");
         $relaybtn_xray = get_xray_key_button($srv['relay_key_xray'], "relay");
 
         echo ""
@@ -179,9 +225,11 @@
     <tbody>
     <?php
       foreach($srvs as $srv) {
-        $mainbtns_awg = get_awg_key_buttons($srv['main_keys_awg'], "main");
+        $mainbtns_awg = get_awg_key_buttons(
+          $srv['name'], $srv['main_keys_awg'], "main");
         $mainbtn_xray = get_xray_key_button($srv['main_key_xray'], "main");
-        $relaybtns_awg = get_awg_key_buttons($srv['relay_keys_awg'], "relay");
+        $relaybtns_awg = get_awg_key_buttons(
+          $srv['name'], $srv['relay_keys_awg'], "relay");
         $relaybtn_xray = get_xray_key_button($srv['relay_key_xray'], "relay");
 
         echo ""
