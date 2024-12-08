@@ -3,6 +3,7 @@
 session_start();
 
 $users = include '../users.php';
+$logged_in = false;
 
 if(isset($_REQUEST['login'])){
   $username = $_REQUEST['username'];
