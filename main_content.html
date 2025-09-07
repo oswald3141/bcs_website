@@ -19,7 +19,7 @@
     document.body.removeChild(link);
   }
 
-  function return_awg_key_to_user(name, standard, decoded) {
+  function return_key_to_user(name, standard, decoded) {
     var c = document.getElementById('awgKeyFormatCheckDecoded');
     if (c.checked) {
       download_str(name + '.conf', decoded);
@@ -57,18 +57,6 @@
 </style>
 
 <?php
-  function awg_link_to_native($key) {
-    $output = null;
-    $retval = null;
-    $command = '../amnezia_link_to_native_awg "' . $key . '"';
-    exec($command, $output, $retval);
-    if ($retval == 0) {
-      return implode('\n', $output);
-    } else {
-      return "ERROR OCCURED";
-    }
-  }
-
   function get_awg_key_buttons($srv, $keys, $keyType) {
     $btns = "";
 
@@ -80,22 +68,24 @@
       return $btns;
     }
 
-    if(!empty($keys)) {
-      foreach($keys as $i=>$key) {
-        $name = $srv . "_" . (++$i) . "_" . $keyType;
-        $conf = awg_link_to_native($key);
-        $btns .=
-          "<button class=\"btn mb-1 btn-{$btnType}\" onclick=
-            \"return_awg_key_to_user('{$name}', '{$key}', '{$conf}')\">".$i."</button>". PHP_EOL;
-      }
-    } else {
+    foreach($keys as $i=>$key) {
+      $name = $srv . "_" . (++$i) . "_" . $keyType;
+      $key_enc = $key['encoded'];
+      $key_nat = substr(json_encode($key['native']), 1, -1);
+      if(empty($key_enc) and empty($key_nat)) {continue;};
+      $btns .= 
+        "<button class=\"btn mb-1 btn-{$btnType}\" onclick=
+          \"return_key_to_user('{$name}', '{$key_enc}', '{$key_nat}')\">".$i."</button>". PHP_EOL;
+    }
+
+    if(empty($btns)) {
       $btns = "Ретрансляция не требуется";
     }
 
     return $btns;
   }
 
-  function get_xray_key_button($key, $keyType) {
+  function get_xray_key_button($srv, $key, $keyType) {
     $btn = "";
 
     if ($keyType == "main") {
@@ -109,9 +99,13 @@
     }
 
     if(!empty($key)) {
+        $name = $srv . "_" . $keyType;
+        $key_enc = $key['encoded'];
+        $key_nat = substr(json_encode($key['native'], 
+          JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT), 1, -1);
         $btn =
           "<button class=\"btn mb-1 btn-{$btnType}\" onclick=
-            \"str_to_clipboard('{$key}')\">Скопировать</button>" . PHP_EOL;
+            \"return_key_to_user('{$name}', '{$key_enc}', '{$key_nat}')\">Скопировать</button>". PHP_EOL;
     }
 
     return $btn;
@@ -123,7 +117,7 @@
 </form>
 
 <div class="container-md text-center mb-2">
-    <h1>Здравствуйте, <?php echo $user_data['name'];?>!</h1>
+    <h1>Здравствуйте, <?php echo $FRONTEND_DATA['user_real_name'];?>!</h1>
     <p class="text-start">
       Вам предоставлен доступ к серверам, перечисленным ниже.<br>
       Нажмите на кнопку с нужным вам ключом в таблице,
@@ -169,7 +163,7 @@
       value="decoded"
     >
     <label class="form-check-label" for="awgKeyFormatCheckDecoded">
-      Расшифровать AWG
+      Расшифровать ключ
     </label>
   </div>
 </div>
@@ -197,13 +191,16 @@
     </thead>
     <tbody>
     <?php
-      foreach($srvs as $srv) {
+      foreach($FRONTEND_DATA['access_srv_data'] as $srv) {
         $mainbtns_awg = get_awg_key_buttons(
-          $srv['name'], $srv['main_keys_awg'], "main");
-        $mainbtn_xray = get_xray_key_button($srv['main_key_xray'], "main");
+          $srv['name'], array_column($srv['awg_keys'], 'main'), "main");
         $relaybtns_awg = get_awg_key_buttons(
-          $srv['name'], $srv['relay_keys_awg'], "relay");
-        $relaybtn_xray = get_xray_key_button($srv['relay_key_xray'], "relay");
+          $srv['name'], array_column($srv['awg_keys'], 'relay'), "relay");
+
+        $mainbtn_xray = get_xray_key_button(
+          $srv['name'], is_null($srv['xray_keys']) ? '' : $srv['xray_keys'][0]['main'], "main");
+        $relaybtn_xray = get_xray_key_button(
+          $srv['name'], is_null($srv['xray_keys']) ? '' : $srv['xray_keys'][0]['relay'], "relay");
 
         echo ""
         ."<tr>" . PHP_EOL
@@ -225,13 +222,16 @@
   <table class="table">
     <tbody>
     <?php
-      foreach($srvs as $srv) {
+      foreach($FRONTEND_DATA['access_srv_data'] as $srv) {
         $mainbtns_awg = get_awg_key_buttons(
-          $srv['name'], $srv['main_keys_awg'], "main");
-        $mainbtn_xray = get_xray_key_button($srv['main_key_xray'], "main");
+          $srv['name'], array_column($srv['awg_keys'], 'main'), "main");
         $relaybtns_awg = get_awg_key_buttons(
-          $srv['name'], $srv['relay_keys_awg'], "relay");
-        $relaybtn_xray = get_xray_key_button($srv['relay_key_xray'], "relay");
+          $srv['name'], array_column($srv['awg_keys'], 'relay'), "relay");
+
+        $mainbtn_xray = get_xray_key_button(
+          $srv['name'], $srv['xray_keys'][0]['main'], "main");
+        $relaybtn_xray = get_xray_key_button(
+          $srv['name'], $srv['xray_keys'][0]['relay'], "relay");
 
         echo ""
         ."<tr>" . PHP_EOL
@@ -329,4 +329,6 @@
   Помните, что современные сайты могут использовать в своей работе множество разных доменов, поэтому настройка раздельного туннелирования сайтов может оказаться нетривиальной.
   Раздельное туннелирование приложений проще в настройке. Например, вы можете установить на свой компьютер второй браузер и заходить через него на российские сайты без
   необходимости отключать VPN, предварительно настроив для этого браузера раздельное туннелирование.<p>
+  <h2>Для чего нужен переключатель "Расшифровать ключ"?</h2>
+  <p>Если его включить, нажатие кнопки в столбце "Ключ AWG" или "Ключ XRay" вместо копирования ключа доступа для приложения AmneziaVPN будет скачивать расшифрованный "родной" конфигурационный файл соответствующего протокола. Такой файл пригоден для использования в приложении <a href="https://docs.amnezia.org/ru/documentation/amnezia-wg/" target="_blank">AmneziaWG</a>. Пожалуйста, не путайте это приложение с AmneziaVPN, которым вы, вероятнее всего, пользуетесь. Приложение AmneziaWG поддерживает только протокол AWG и не включает никаких дополнительных функций, в отличие от приложения AmneziaVPN, которое среди прочего поддерживает другие протоколы. Расшифрованный конфигурационный файл и приложение AmneziaWG могут вам понадобится для настройки VPN на устройствах Apple, так как приложение AmneziaVPN удалено из российского AppStore по требованию Роскомнадзора. Помимо этого, конфигурационный файл будет полезен при настройке VPN по протоколу AWG на роутерах.<p>
 </div>
