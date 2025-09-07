@@ -1,5 +1,0 @@
-awg_key_1_user0_jimmy_relay
-awg_key_2_user0_jimmy_relay
-awg_key_3_user0_jimmy_relay
-awg_key_4_user0_jimmy_relay
-awg_key_5_user0_jimmy_relay
