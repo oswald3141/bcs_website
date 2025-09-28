@@ -28,6 +28,13 @@ function generate_awg_keys($user_awg_key_data, $SERVER_DB, $relay_name) {
 		$this_relay_srv_data = make_relay($this_srv_data, 
 			find_server($relay_name, $SERVER_DB));
 
+		usort($this_srv_key_data,
+			function ($a, $b) {
+				$last_digit = function($ip) {return ip2long($ip) % 256;};
+				return $last_digit($a->IP) - $last_digit($b->IP);
+			}
+		);
+
 		$this_srv_keys = array();
 
 		for($j = 0; $j < count($this_srv_key_data); ++$j) {
