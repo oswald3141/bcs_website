@@ -3,6 +3,7 @@
         "username": "user1",
         "real_name": "Иван",
         "password_hash": "$2y$10$EEicO5WvCVRkoaiLxBe4DOoiloijrXavuPnU3AS8rfb05CTfjhv9.",
+        "creation_date": "Sun Jul 21 19:00:00 2024",
         "awg_key_data": [
             {
                 "srv_name": "dummy2",
@@ -118,6 +119,7 @@
         "username": "user2",
         "real_name": "Степан",
         "password_hash": "$2y$10$9.0nBu4Jx3bzZO6klg8nH.cHN0YybxB8Cp9mHbpVoESAlf.TO8sBO",
+        "creation_date": "Mon Jul 22 20:00:00 2024",
         "awg_key_data": [
             {
                 "srv_name": "dummy2",
