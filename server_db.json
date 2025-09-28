@@ -18,6 +18,7 @@
             "H1": "000000011",
             "Jmin": "41",
             "pub_key": "pub_key_awg_dummy1",
+            "priv_key": "priv_key_awg_dummy1",
             "H4": "000000041",
             "psk_key": "psk_key_dummy1",
             "S2": "21",
@@ -27,7 +28,8 @@
         "xray_params": {
             "site": "www.site1.com",
             "short_id": "short_id_1",
-            "pub_key": "pub_key_xray_dummy1"
+            "pub_key": "pub_key_xray_dummy1",
+            "priv_key": "priv_key_xray_dummy1",
         }
     },
     {
@@ -49,6 +51,7 @@
             "H1": "000000013",
             "Jmin": "43",
             "pub_key": "pub_key_awg_dummy3",
+            "priv_key": "priv_key_awg_dummy3",
             "H4": "000000043",
             "psk_key": "psk_key_dummy3",
             "S2": "23",
@@ -76,6 +79,7 @@
             "H1": "000000012",
             "Jmin": "42",
             "pub_key": "pub_key_awg_dummy2",
+            "priv_key": "priv_key_awg_dummy2",
             "H4": "000000042",
             "psk_key": "psk_key_dummy2",
             "S2": "22",
@@ -85,7 +89,8 @@
         "xray_params": {
             "site": "www.site2.com",
             "short_id": "short_id_2",
-            "pub_key": "pub_key_xray_dummy2"
+            "pub_key": "pub_key_xray_dummy2",
+            "priv_key": "priv_key_xray_dummy2",
         }
     }
 ]
