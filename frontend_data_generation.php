@@ -105,8 +105,8 @@ function generate_frontend_data($user_data, $SERVER_DB, $relay_name) {
 			$SERVER_DB[$i]->location;
 		$frontend_data['access_srv_data'][$srv_name]['description'] =
 			$SERVER_DB[$i]->description;
-		$frontend_data['access_srv_data'][$srv_name]['order'] =
-			$SERVER_DB[$i]->order;
+		$frontend_data['access_srv_data'][$srv_name]['display_order'] =
+			$SERVER_DB[$i]->display_order;
 
 		$frontend_data['access_srv_data'][$srv_name]['awg_keys'] =
 			$awg_keys[$srv_name];
@@ -116,7 +116,7 @@ function generate_frontend_data($user_data, $SERVER_DB, $relay_name) {
 	}
 
 	usort($frontend_data['access_srv_data'], 
-		function ($a, $b) {return $a['order'] - $b['order'];});
+		function ($a, $b) {return $a['display_order'] - $b['display_order'];});
 
 
 	return $frontend_data;
