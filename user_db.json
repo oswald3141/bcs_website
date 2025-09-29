@@ -230,5 +230,30 @@
                 ]
             }
         ]
+    },
+    {
+        "username": "user3",
+        "real_name": "Пётр",
+        "password_hash": "$2y$10$EEicO5WvCVRkoaiLxBe4DOoiloijrXavuPnU3AS8rfb05CTfjhv9.",
+        "creation_date": "Mon Jul 22 20:00:00 2024",
+        "awg_key_data": [],
+        "xray_key_data": [
+            {
+                "srv_name": "dummy2",
+                "key_data": [
+                    {
+                        "id": "id_xray_dummy2_user2"
+                    }
+                ]
+            },
+            {
+                "srv_name": "dummy1",
+                "key_data": [
+                    {
+                        "id": "id_xray_dummy1_user2"
+                    }
+                ]
+            }
+        ]
     }
 ]

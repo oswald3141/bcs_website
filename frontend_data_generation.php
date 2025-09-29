@@ -115,8 +115,13 @@ function generate_frontend_data($user_data, $SERVER_DB, $relay_name) {
 		$frontend_data['access_srv_data'][$srv_name]['display_order'] =
 			$SERVER_DB[$i]->display_order;
 
+		$this_srv_awg_keys = [];
+		if (array_key_exists($srv_name, $awg_keys)) {
+			$this_srv_awg_keys = $awg_keys[$srv_name];
+		}
+
 		$frontend_data['access_srv_data'][$srv_name]['awg_keys'] =
-			$awg_keys[$srv_name];
+			$this_srv_awg_keys;
 		$frontend_data['access_srv_data'][$srv_name]['xray_keys'] =
 			array_key_exists($srv_name, $xray_keys) ? 
 				$xray_keys[$srv_name] : NULL;
