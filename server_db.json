@@ -29,7 +29,7 @@
             "site": "www.site1.com",
             "short_id": "short_id_1",
             "pub_key": "pub_key_xray_dummy1",
-            "priv_key": "priv_key_xray_dummy1",
+            "priv_key": "priv_key_xray_dummy1"
         }
     },
     {
@@ -90,7 +90,7 @@
             "site": "www.site2.com",
             "short_id": "short_id_2",
             "pub_key": "pub_key_xray_dummy2",
-            "priv_key": "priv_key_xray_dummy2",
+            "priv_key": "priv_key_xray_dummy2"
         }
     }
 ]
