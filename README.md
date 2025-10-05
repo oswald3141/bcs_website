@@ -1,5 +1,5 @@
 # bcs_website
-BCServers project website
+BCServers project website distributing AWG and XRay VPN server access keys to users.
 
 ## db_management
 Examples:
