@@ -28,3 +28,6 @@ python ./db_management/generate_srv_conf.py dummy1 awg ./user_db.json ./server_d
 # Generate server.json and clientsTable for Xray server
 python ./db_management/generate_srv_conf.py dummy1 xray ./user_db.json ./server_db.json ./srv/xray/
 ```
+
+## Website screenshots
+<img src="login_page.png" width="50%"><img src="main_page.png" width="50%">
