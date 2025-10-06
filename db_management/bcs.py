@@ -146,7 +146,7 @@ def generate_server_json(user_db, srv_name, xray_params):
 					"dest": xray_params["site"]+":443",
 					"privateKey": xray_params["priv_key"],
 					"serverNames": [xray_params["site"]],
-					"serverNames": [xray_params["short_id"]]
+					"shortIds": [xray_params["short_id"]]
 				},
 				"security": "reality"
 			}
@@ -238,7 +238,7 @@ def _grant_xray_access(user, srv_name):
 	if kd is None:
 		user['xray_key_data'].append({
 			'srv_name': srv_name,
-			'key_data': {"id": _generate_xray_cliend_id()}
+			'key_data': [{"id": _generate_xray_cliend_id()}]
 		})
 	else:
 		sys.exit("Multiple keys for Xray is not supported.")
